@@ -1,0 +1,42 @@
+name: React deployment with artifact
+on:
+  push:
+    branches:
+      - main
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the context
+        run: echo "${{ toJSON(github.event) }}"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Run test
+        run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Run build
+        run: npm run build
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Deploy
+        run: echo "Deploying ..."
