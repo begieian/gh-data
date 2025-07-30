@@ -43,5 +43,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
+      - name: Listing the artifact
+        run: ls -l
       - name: Deploy
         run: echo "Deploying ..."
