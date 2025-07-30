@@ -23,8 +23,6 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    outputs:
-      output_value: ${{ steps.output_value_id.outputs.output_file }}
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -32,25 +30,9 @@ jobs:
         run: npm ci
       - name: Run build
         run: npm run build
-      - name: Output value
-        id: output_value_id
-        run: find dist/assets/*.js -type f -execdir echo 'output_file={}' >> $GITHUB_OUTPUT ';'
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: dist
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact from build
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
-      - name: Display the context from previous job
-        run: echo "${{ needs.build.outputs.output_value }}"
-      - name: list the files
-        run: ls
       - name: Deploy
         run: echo "Deploying ..."
